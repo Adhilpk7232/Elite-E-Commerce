@@ -1,0 +1,56 @@
+<!-- / Navbar -->
+<table style="margin-left: 100px;" >
+    <thead>
+        <th></th>
+        <th></th>
+    </thead>
+    <tbody >
+        <td>
+          <div class="zoom">
+          <div class="original" >
+            <img class="big_img" src="/products/<%-data.image[0]%>" alt=""  style="width: 300px;height: auto;">
+            
+         
+        </div>
+
+     
+
+       
+      </div>
+      </td>
+      
+      <td > <div style="margin-left: 50px;width: 450px;">
+        <h1><%- data.product_name %></h1>
+        <h3>description:<span><%- data.description %></span></h3>
+        <h3>price :₹ <span><%- data.price %></span></h3>
+        <h3><span>catagory :</span> <%- data.catagory %></h3>
+        <h3><span>Date :</span> <%- data.Date %></h3>
+     
+        <h3><span>quantity :</span> <%- data.quantity %></h3>
+      
+        
+     </div></td>
+     
+      
+ 
+
+    </tbody>
+</table>
+ 
+
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+console.log("Document ready");
+var smallImgs = document.querySelectorAll('.small_img');
+var bigImg = document.querySelector('.big_img');
+smallImgs.forEach(function(img) {
+  img.addEventListener('mouseover', function() {
+    console.log("Hovering over small image");
+    console.log("Small image source: " + img.getAttribute('src'));
+    bigImg.setAttribute('src', img.getAttribute('src'));
+    console.log("Big image source updated to: " + bigImg.getAttribute('src'));
+  });
+});
+});
+</script>

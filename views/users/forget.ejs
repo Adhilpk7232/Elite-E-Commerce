@@ -1,0 +1,48 @@
+<%-include('../layouts/header.ejs') %>
+
+<div class="container col-lg-3 mt-5 border bg-light">
+    <div class="row">
+      <form action="/forget" method="post">
+        <h1>forget password</h1>
+        <!-- Email input -->
+        <div class="form-outline mb-4 mt-5">
+          <input type="email" id="form2Example1" name="email" class="form-control" />
+          <label class="form-label" for="form2Example1">Email address</label>
+        </div>
+        <!-- Password input -->
+        <!-- <div class="form-outline mb-4">
+          <input type="password" id="form2Example2" name="password" class="form-control" />
+          <label class="form-label" for="form2Example2">Password</label>
+        </div> -->
+        <!-- 2 column grid layout for inline styling -->
+        
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4" >Send reset link</button>
+        <!-- Register buttons -->
+        
+        </div>
+  
+  
+        <% if(typeof message !=='undefined') { %>
+  
+          <!-- <a href="#!" class="small text-muted"><%= message %></a> -->
+  
+          <div class="alert alert-danger text-center" role="alert">
+           <strong><%= message %></strong> 
+          </div>
+  
+          <%}%>
+          <% if (typeof message2 !=='undefined'){ %>
+            <div class="alert alert-success text-center" role="alert">
+              <strong><%= message2 %></strong>
+
+            </div> 
+          <%}%>
+      </form>
+
+      
+    </div>
+  </div>
+  
+  
+  <%-include('../layouts/footer.ejs') %>
