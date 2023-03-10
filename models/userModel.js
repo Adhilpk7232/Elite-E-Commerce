@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
         required:true,
         default:0
     },
+    is_mobileVerified:{
+        type:Number,
+        required:true,
+        default:0
+    },
     block:{
         type:Boolean,
         default:false
@@ -35,7 +40,37 @@ const userSchema = new mongoose.Schema({
     token:{
         type:String,
         default:''
-    }
+    },
+    cart:[{
+        productId:{
+            type:mongoose.Types.ObjectId,
+            ref:'Product',
+            required:true
+        },
+        price:{
+            type:Number
+        },
+        qty:{
+            type:Number,
+            required:true,
+            default:0
+        },
+        productTotalPrice:{
+            type:Number,
+            required:true
+        }
+    }],
+    cartTotalPrice:{
+        type:Number,
+        // default:0
+    },
+    whishlist:[{
+        product:{
+            type:mongoose.Types.ObjectId,
+            ref:"Product",
+            required:true
+        }
+    }]
 })
 
 module.exports= mongoose.model('User',userSchema)

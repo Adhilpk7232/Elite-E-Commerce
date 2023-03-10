@@ -6,6 +6,7 @@ const path = require('path')
 const ObjectId = require('mongodb').ObjectId
 
 const bcrypt = require('bcrypt')
+const { log } = require("console")
 
 
 const securePassword = async (password) => {
@@ -41,7 +42,8 @@ const verifyLogin = async (req,res)=>{
                 if(userData.is_admin === 0){
                     res.render('login',{message:"Email and Password Is Inccorect"})
                 }else{
-                    req.session.user_id = userData._id
+                    req.session.admin_id = userData._id
+                    console.log(req.session.admin_id);
                     res.redirect('/admin/home')
                 }
 
@@ -130,10 +132,13 @@ const insertCategory = async (req,res)=>{
             exist=null
         }else{
             console.log(catUP);
+
+            const filename=req.file.filename
+            console.log(filename);
             const category = new Category({
                 categoryName:catUP,
                 description:req.body.description,
-                // image:req.file.filename
+                image:req.file.filename
                 
                 
             })
@@ -237,7 +242,8 @@ const InertProduct = async (req,res)=>{
 }
 const loadProduct = async (req,res)=>{
     try{
-    const productData= await Product.find({})
+    const productData= await Product.find({}).populate('category').exec()
+    console.log(productData);
   
     res.render("products",{productData})
 
@@ -247,7 +253,7 @@ const loadProduct = async (req,res)=>{
 }
 const EditProduct = async (req,res)=>{
     try{
-        const productData = await  Product.findOne({_id:req.query.id})
+        const productData = await  Product.findOne({_id:req.params.id})
         const categoryData = await  Category.find()
         res.render("edit-product",{productData,categoryData})
    
@@ -274,21 +280,63 @@ const UpdateProduct = async (req,res)=>{
         console.log(error.message);
     }
 }
+const updateImage = async(req,res)=>{
+    try{
+        const id =req.params.id
+        console.log(id);
+        const proData = await Product.findOne({_id:id})
+        console.log(proData);
+        const imglength = proData.image.length
+        if(imglength <=4){
+            let images=[]
+            for(file of req.files){
+                images.push(file.filename)
+            }
+            if(imglength +images.length <= 4){
+                const updateData = await Product.updateOne({_id:id},{$addToSet:{image:{$each:images}}})
+                res.redirect('/admin/edit-product/'+id)
+            }else{
+                const productData = await  Product.findOne({_id:id})
+                const categoryData = await  Category.find()
+                res.render("edit-product",{productData,categoryData,imgFull:true})
+            }
+
+        }else{
+            res.redirect('/admin/edit-product/')
+        }
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const deleteImage = async(req,res) =>{
+    try{
+        const imgid = req.params.imgid
+        const prodid = req.params.prodid
+        fs.unlink(path.join(__dirname,'../public/products',imgid),()=>{})
+        const productImg = await Product.updateOne({_id:prodid},{$pull:{image:imgid}})
+
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
 const DeleteProduct = async (req,res)=>{
     try{
-        const id = req.query.id
-        const productData=await Product.deleteOne({_id:id})
-        if(productData){
-            res.redirect('/admin/product')
-        }
+        // const id = req.query.id
+        // const productData=await Product.deleteOne({_id:id})
+        // if(productData){
+        //     res.redirect('/admin/product')
+        // }
         const imgId =req.query.id
    fs.unlink(path.join(__dirname,'../public/products',imgId),()=>{})
-    Product.deleteOne({_id:id}).then(()=>{
-        res.redirect('/admin/products')
+    Product.deleteOne({_id:req.query.id}).then(()=>{
+        res.redirect('/admin/product')
     })
    
     }catch(error){
         console.log(error.message);
+        console.log("from delete product");
     }
 }
 const ViewProduct = async (req,res)=>{
@@ -319,5 +367,7 @@ module.exports={
     EditProduct,
     UpdateProduct,
     DeleteProduct,
-    ViewProduct
+    ViewProduct,
+    updateImage,
+    deleteImage
 }    

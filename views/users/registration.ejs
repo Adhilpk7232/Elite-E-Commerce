@@ -16,7 +16,7 @@
       <div class="col-xl-9">
 
         <h1 class="text-white mb-4">Create an account</h1>
-        <form action="/register" method="post">
+        <form action="/register" method="post" id="my-form">
           <div class="card" style="border-radius: 15px;">
               <div class="card-body">
     
@@ -25,7 +25,7 @@
                     <h6 class="mb-0">Full name</h6>
                   </div>
                   <div class="col-md-9 pe-5">
-                    <input type="text" class="form-control form-control-lg" name="name" placeholder="Enter your Name" />
+                    <input type="text" class="form-control form-control-lg" name="name" placeholder="Enter your Name" id="name"/>
                   </div>
                 </div>
     
@@ -39,7 +39,7 @@
                   </div>
                   <div class="col-md-9 pe-5">
     
-                    <input type="email" class="form-control form-control-lg" placeholder="enter email" name="email" />
+                    <input type="email" class="form-control form-control-lg" placeholder="enter email" name="email" id="email" />
                   </div>
                 </div>
               </div>
@@ -54,7 +54,7 @@
                   </div>
                   <div class="col-md-9 pe-5">
     
-                    <input type="password" class="form-control form-control-lg" placeholder="Enter your Password" name="password" />
+                    <input type="password" class="form-control form-control-lg" placeholder="Enter your Password" name="password" id="password"/>
                   </div>
                 </div>
               <hr class="mx-n3">
@@ -67,7 +67,7 @@
                   </div>
                   <div class="col-md-9 pe-5">
     
-                    <input type="mobile" name="mno" class="form-control form-control-lg" placeholder="Enter your Mobile Number">
+                    <input type="mobile" name="mno" class="form-control form-control-lg" placeholder="Enter your Mobile Number" id="mobile">
     
                   </div>
                 </div>
@@ -105,6 +105,49 @@
     </div>
   </div>
 </section>
+<script>
+  // get form elements
+const form = document.querySelector('#my-form');
+const nameInput = document.querySelector('#name');
+const emailInput = document.querySelector('#email');
+const passwordInput = document.querySelector('#password');
+const mobileInput = document.querySelector('#mobile');
+
+// add submit event listener to form
+form.addEventListener('submit', (event) => {
+  event.preventDefault(); // prevent form from submitting
+
+  // get input values
+  const nameValue = nameInput.value.trim();
+  const emailValue = emailInput.value.trim();
+  const passwordValue = passwordInput.value.trim();
+  const mobileValue = mobileInput.value.trim();
+
+  // check if required fields are empty
+  if (nameValue === '' || emailValue === '' || passwordValue === '' || mobileValue === '') {
+    alert('Please fill in all the required fields');
+    return;
+  }
+
+  // check if email format is valid
+  const emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+  if (!emailRegex.test(emailValue)) {
+    alert('Please enter a valid email address');
+    return;
+  }
+
+  // check if mobile format is valid
+  const mobileRegex = /^\d{10}$/;
+  if (!mobileRegex.test(mobileValue)) {
+    alert('Please enter a valid 10-digit mobile number');
+    return;
+  }
+
+  // if all validations pass, submit the form
+  form.submit();
+});
+
+</script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
