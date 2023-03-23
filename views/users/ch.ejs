@@ -1,0 +1,138 @@
+<div class="row">
+    <div class="col-lg-6">
+      <h2>Select shipping address</h2>
+      <div class="card  ms-5" style="width: 600px;">
+        <div class="card-header">
+          Address
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <div class=" ">
+                <form>
+                  <%if(address == null){ %>
+                  <%}else{ %> 
+                   <% address.userAddresses.forEach((value)=> { %> 
+                  
+                    <label>
+                      <input type="radio" name="address" value="address1">
+                      <div class="mb-3 ms-5" >
+                          <span><%= value.fullname%><br><%= value.mobileNumber %> <br> <%= value.houseAddress %>,<%= value.streetAddress %> ,<%= value.landMark %> <br><%= value.cityName %>,<%= value.state %> <br><%= value.pincode %></span>
+                      </div>
+                    </label>
+                    <br>
+                    <hr>
+                  <% 
+                    }  )
+                }%>
+                  </form>
+            </div>
+            <div>
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                ADD Address
+              </button>
+            </div>
+            
+          </blockquote>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="order_box">
+        <h2>Your Order</h2>
+        <ul class="list">
+          
+          <li>
+            <a href="#">Product
+              <span>Total</span>
+            </a>
+          </li>
+          <% userData.cart.forEach((cart)=> { %> 
+          <li>
+            <a href="#"><%=cart.productId.product_name %>
+              <span class="middle">x <%= cart.qty%></span>
+              <span class="last">₹<%= cart.productTotalPrice%></span>
+            </a>
+          </li>
+        <% }) %>
+          <!-- <li>
+            <a href="#">Fresh Tomatoes
+              <span class="middle">x 02</span>
+              <span class="last">$720.00</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">Fresh Brocoli
+              <span class="middle">x 02</span>
+              <span class="last">$720.00</span>
+            </a>
+          </li>
+        </ul>
+        <ul class="list list_2"> -->
+          <li>
+            <a href="#">Subtotal
+              <span>₹<%= userData.cartTotalPrice %></span>
+            </a>
+          </li>
+          <li>
+            <a href="#">Shipping
+              <span>Flat rate: ₹00.00</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">Total
+              <span>₹<%= userData.cartTotalPrice%></span>
+            </a>
+          </li>
+        </ul>
+        <div class="payment_item">
+          <div class="radion_btn">
+            <input type="radio" id="f-option5" name="selector" />
+            <label for="f-option5">COD</label>
+            <div class="check"></div>
+          </div>
+          <p>
+            Cash on delivery.pay after delivered
+          </p>
+        </div>
+        <div class="payment_item active">
+          <div class="radion_btn">
+            <input type="radio" id="f-option6" name="selector" />
+            <label for="f-option6">Paypal </label>
+            <img src="img/product/single-product/card.jpg" alt="" />
+            <div class="check"></div>
+          </div>
+          <p>
+            Please send a check to Store Name, Store Street, Store Town,
+            Store State / County, Store Postcode.
+          </p>
+        </div>
+        <div class="creat_account">
+          <input type="checkbox" id="f-option4" name="selector" />
+          <label for="f-option4">I’ve read and accept the </label>
+          <a href="#">terms & conditions*</a>
+        </div>
+        <a class="btn_3" href="#">Proceed to Paypal</a>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  <% console.log(userData.whishlist.length) %>
+        <% if(userData.whishlist.length == 0) {%>
+          <h3>Ooops there no any products in wishlist</h3>
+        <%}else{ %>
+
+
+          <%}%>
+          <%}%>

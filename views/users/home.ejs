@@ -26,17 +26,20 @@
     <link rel="stylesheet" href="css/style.css">
 
     <script src="https://kit.fontawesome.com/31cfb4089e.js" crossorigin="anonymous"></script>
-    <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <!--::header part start::-->
+
+    <!-- navbar  -->
     <header class="main_menu home_menu">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a>
+                        <a class="navbar-brand" href="index.html"> <img src="pubilc/brand-img/logo.png" alt="logo"> </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +54,22 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="/shopCategory">Shop</a>
                                 </li>
+                                <% if(user == true) { %>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/cart">Cart</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/wishlist">Wishlist</a>
                                 </li>
+                                <% }else{ %>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/login">Cart</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/login">Wishlist</a>
+                                    </li>
+                                <% } %>
+                                
                                 <%if(user == true){ %>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/logout">logout</a>
@@ -72,9 +85,9 @@
                         <div class="hearer_icon d-flex">
                             <a id="search_1" href="javascript:void(0)"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></i></a>
                             
-                                <a href="/profile"><i class="fa-solid fa-user"></i></i></a>
+                                <a href="/profile"><i class="fa-solid fa-user"></i></a>
                             
-                            <div class="dropdown cart">
+                            <div class=" cart">
                                 <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-cart-plus"></i>
@@ -237,6 +250,7 @@
                                             <h4><%=product.product_name %></h4>
                                             <h3>₹<%=product.price %></h3>
                                             <a  class="btn-product btn-cart" title="Add to cart" onclick="addToCart('<%=product._id%>')" ><span>add to cart</span></a>
+                                            <a  class="btn-product btn-cart" title="Add to wishlist" onclick="addToWishlist('<%=product._id%>')"  ><span><i class="fa-regular fa-heart" ></i></span></a>
                                             <!-- <a href="/addCart/<%=product._id %>" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a> -->
                                             <!-- <button type="submit">add to cart</button> -->
                                         </div>
@@ -258,106 +272,24 @@
                                                     },
                                                     method: 'post',
                                                     success: (res) => {
-                                                        console.log(success)
+                                                        // console.log(success)
+                                                        if(res){
+                                                            Swal.fire({
+                                                                position: 'center',
+                                                                icon: 'success',
+                                                                title: 'Your product added to cart',
+                                                                showConfirmButton: false,
+                                                                timer: 1000
+                                                            })
 
-                                                            // Swal.fire({
-                                                            //     position: 'center',
-                                                            //     icon: 'success',
-                                                            //     title: 'Your product added to cart',
-                                                            //     showConfirmButton: false,
-                                                            //     timer: 1000
-                                                            // })
-
-                                                        
+                                                        }
+  
                                                     }
                                                 })
                                             }
 
                                         </script>
-                        <!-- <div class="single_product_list_slider">
-                            <div class="row align-items-center justify-content-between">
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_1.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="/addCart" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_2.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="#" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_3.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="/addCart" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_4.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="#" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_5.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="/addCart" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_6.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="/addCart" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_7.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="/addCart" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="img/product/product_8.png" alt="">
-                                        <div class="single_product_text">
-                                            <h4>Quartz Belt Watch</h4>
-                                            <h3>$150.00</h3>
-                                            <a href="/addCart" class="add_cart">+ add to cart<i class="fa-regular fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
+
                     </div>
                 </div>
             </div>
@@ -366,7 +298,7 @@
     <!-- product_list part start-->
 
     <!-- awesome_shop start-->
-    <section class="our_offer section_padding">
+    <!-- <section class="our_offer section_padding">
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-6 col-md-6">
@@ -397,8 +329,50 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- awesome_shop part start-->
+    
+
+    <!-- offer banner  -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <% for (var i = 0; i < bannerData.length; i++) { %>
+                <li data-target="#carouselExampleIndicators" data-slide-to="<%= i %>" <% if (i == 0) { %>class="active"<% } %>></li>
+            <% } %>
+        </ol>
+        <div class="carousel-inner">
+            <% for (var i = 0; i < bannerData.length; i++) { %>
+                <div class="carousel-item <% if (i == 0) { %>active<% } %>">
+                    <img src="/banner-img/<%= bannerData[i].bannerImage %>" alt="image">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5><%= bannerData[i].offerName %></h5>
+                    </div>
+                </div> 
+            <% } %>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            $('#carouselExampleIndicators').on('slide.bs.carousel', function (event) {
+                var index = $(event.relatedTarget).index();
+                $('ol.carousel-indicators li').removeClass('active');
+                $('ol.carousel-indicators li[data-slide-to="' + index + '"]').addClass('active');
+            });
+        });
+    </script>
+    
+
+    
+          
 
     <!-- product_list part start-->
     <section class="product_list best_seller section_padding">
@@ -574,6 +548,39 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </footer>
+    <script>
+        function addToWishlist(prodId) {
+            $.ajax({
+                url: '/add-to-wishlist',
+                data: {
+                    productId: prodId
+                },
+                method: 'post',
+                success: (res) => {
+                    if(res.status){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Your product added to wishlist',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+
+                    }else {
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Item already exist!',
+                           
+                        })
+                        
+                    }  
+                }
+            })
+        }
+
+    </script>
     <!--::footer_part end::-->
 
     <!-- jquery plugins here-->

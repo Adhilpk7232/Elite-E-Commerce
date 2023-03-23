@@ -52,12 +52,18 @@ route.get('/forget-password',auth.isLogout,userController.forgetPasswordLoad)
 route.post('/forget-password',userController.resetPassword)
 // Render Home Page dynamically
 route.get('/home',auth.isLogin,userController.loadHome)
-
+///Cart
 route.post('/add-to-cart',auth.isLogin,userController.AddToCart)
 route.get('/cart',auth.isLogin,userController.loadCart)
-
+route.post('/delete-cart-product',userController.deleteCartProduct)
 route.post('/change-quantity',userController.change_Quantities)
-// route.post ('/delete-cart-product',userController.deleteCartProduct)
+//Wishlist
+route.get('/wishlist',auth.isLogin,userController.loadWhishlist)
+route.post('/add-to-wishlist',auth.isLogin,userController.AddToWishlist)
+route.post('/remove-wishlist',auth.isLogin,userController.deleteWishlistProduct)
+route.post('/wishlistToCart',auth.isLogin,userController.wishlistToCart)
+
+
 
 route.get('/checkout',userController.loadCheckout)
 route.get('/shopCategory/:id',userController.loadShopCategory)
@@ -67,9 +73,24 @@ route.get('/profile',userController.loadProfile)
 
 route.post('/add-address',userController.insertAddress)
 route.get('/edit-address/:id/:adrsId',auth.isLogin,userController.editAddress)
+route.post('/add-address-checkOut',userController.addAddressCheckout)
+
 
 route.post('/edit-update-address/:addressIndex',auth.isLogin,userController.updateAddress)
 route.get('/delete-address/:id/:adrsId',userController.DeleteAddress)
+
+route.post('coupon-apply',auth.isLogin,userController.couponApply)
+
+
+route.get('/orderlist',auth.isLogin,userController.orderList)
+route.get("/cancel",auth.isLogin,userController.cancelOrder)
+route.post('/place-order',auth.isLogin,userController.placeOrder)
+
+
+route.post('/verify-payment',auth.isLogin,userController.verifyPayment)
+route.get('/ordersuccess',auth.isLogin,userController.orderSuccess)
+
+
 
         
 module.exports = route

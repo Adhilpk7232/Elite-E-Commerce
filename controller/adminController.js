@@ -1,12 +1,17 @@
 const User = require("../models/userModel")
 const Category =require('../models/categoryModel')
 const Product = require('../models/productModel')
+const Order = require('../models/orderModel')
+const Coupon = require('../models/couponModel')
+const Banner = require('../models/bannerModel')
 const fs = require('fs')
 const path = require('path')
 const ObjectId = require('mongodb').ObjectId
 
 const bcrypt = require('bcrypt')
 const { log } = require("console")
+const mongoose = require('mongoose')
+const { disable } = require("../routes/adminRoute")
 
 
 const securePassword = async (password) => {
@@ -263,15 +268,17 @@ const EditProduct = async (req,res)=>{
 }
 const UpdateProduct = async (req,res)=>{
     try{
-        const id = req.body.id
+        const id = req.params.id
+        // const id = mongoose.Types.ObjectId(idTemp)
+        // console.log("product"+id);
         const productData = await Product.updateOne({_id:id},{$set:{
             product_name:req.body.productname,
             category:req.body.categoryName,
             description:req.body.description,
             quantity:req.body.quantity,
-            image:images,
             price:req.body.price
         }})
+        // console.log("udpdate"+productData);
         if(productData){
             res.redirect('/admin/product')
         }
@@ -349,6 +356,243 @@ const ViewProduct = async (req,res)=>{
         console.log(error.message);
     }
 }
+const loadOrderlist = async(req,res) => { 
+    try{
+        const order = await Order.find()
+        console.log(order);
+        res.render('order',{order})
+
+    }catch(error){
+        console.log(error.message);
+        console.log("hellojksnx");
+    }
+}
+const placedOrder  = async(req,res) => { 
+    try{
+        const orderId = req.query.id
+        console.log(orderId);
+        const update = await Order.updateOne({_id:orderId},{$set:{orderStatus:'placed'}})
+        console.log(update);
+        res.redirect('/admin/order')
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const shipedOrder  = async(req,res) => { 
+    try{
+        const orderId = req.query.id
+        const update = await Order.updateOne({_id:orderId},{$set:{orderStatus:'shiped'}})
+        console.log(update);
+        res.redirect('/admin/order')
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const deliveredOrder  = async(req,res) => { 
+    try{
+        const orderId = req.query.id
+        const update = await Order.updateOne({_id:orderId},{$set:{orderStatus:'delivered'}})
+        console.log(update);
+        res.redirect('/admin/order')
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const loadcoupon = async(req,res) => {
+    try{
+        const couponsData  = await Coupon.find({disable:false})
+        res.render('coupon',{couponsData})
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const addCoupon = async(req,res) => { 
+    try{
+        console.log(req.body);
+        const couponData = {...req.body}
+        console.log( "asim"+couponData.radeemamount);
+        console.log( "adhil"+couponData.expirydate);
+        const couponAdd = new Coupon({
+            couponCode: couponData.coupon_code,
+            couponAmountType: couponData.fixedandpercentage,
+            couponAmount: couponData.couponamount,
+            minRedeemAmount: couponData.radeemamount,
+            minCartAmount: couponData.cartamount,
+            startDate:couponData.startdate,
+            expiryDate: couponData.expirydate,
+            limit: couponData.usagelimit,
+        })
+        const insert  = await couponAdd.save()
+        console.log(couponAdd);
+        console.log(insert);
+        res.send('success')
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const editCoupon = async(req,res) => { 
+    try{
+        const couponId = req.params.id
+        const couponData = await Coupon.findOne({_id:couponId})
+        res.render('editCoupon',{couponData})
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const updateCoupon = async(req,res) => { 
+    try{
+        const couponId = req.params.id
+        const update = await Coupon.updateOne({_id:couponId},{$set:{
+            couponCode: req.body.coupon_code,
+            couponAmountType: req.body.fixedandpercentage,
+            couponAmount: req.body.couponamount,
+            minRedeemAmount: req.body.radeemamount,
+            minCartAmount: req.body.cartamount,
+            startDate:req.body.startdate,
+            expiryDate: req.body.expirydate,
+            limit: req.body.usagelimit,
+        }})
+        console.log(update);
+        res.redirect('/admin/coupon')
+        
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+const DeleteCoupon = async(req,res) => { 
+    try{
+        const couponId = req.params.id
+        const update = await Coupon.updateOne({_id:couponId},{$set:{disable:true}})
+        res.redirect('/admin/coupon')
+
+    }catch(error){
+        console.log(error.message);
+    }
+}
+ const loadOfferBanner = async(req,res) => {
+    try{
+        const banner =await Banner.find()
+        res.render('OfferBanner',{banner})
+
+    }catch(error){
+        console.log(error.message);
+    }
+ }
+ const insertBanner = async(req,res) => { 
+    try{
+        const filename=req.file.filename
+        const bannerData = new Banner({
+            // prodName:req.body.prodname,
+            offerName:req.body.offername,
+            // offerPrice:req.body.offerprice,
+            // oldPrice:req.body.actualprice,
+            bannerImage:filename,
+        })
+        const result =await bannerData.save()
+        if(result){
+            res.redirect('/admin/offer-banner')
+        }else{
+            console.log("not save banner");
+        }
+
+    }catch(error){
+        console.log(error.message);
+    }
+ }
+ const editBanner = async(req,res) => {
+    try{
+        const bannerId  = req.query.id
+        const banner  = await Banner.findOne({_id:bannerId})
+        res.render('edit-banner',{banner})
+    }catch(error){
+        console.log(error.message);
+    }
+ }
+ const updateBanner = async(req,res) => { 
+    try{
+        const bannerId = req.query.id
+        const filename=req.file.filename
+        const bannerData = await Banner.updateOne({_id:bannerId},{$set:{
+            // prodName:req.body.prodname,
+            offerName:req.body.offername,
+            // offerPrice:req.body.offerprice,
+            // oldPrice:req.body.actualprice,
+            bannerImage:filename,
+        }})
+        if(bannerData){
+            res.redirect('/admin/offer-banner')
+        }
+
+    }catch(error){
+        console.log(error.message);
+    }
+ }
+ const deleteBanner = async(req,res) => { 
+    try{
+        // console.log(req.query.id);
+        const id = req.query.id
+        const bannerData = await Banner.findOne({_id:id},{status:1,_id:id})
+        if(bannerData.status == false){
+            const wait = await Banner.updateOne({_id:id},{$set:{status:true}})
+            
+            res.redirect('/admin/offer-banner')
+        }else{
+            const wait = await Banner.updateOne({_id:id},{$set:{status:false}})
+            
+            res.redirect('/admin/offer-banner')
+
+        }
+        
+
+    }catch(error){
+        console.log(error.message);
+    }
+ }
+ const loadSales = async (req,res) => {
+    try{
+        res.render('salesReport')
+    }catch(error){
+        console.log(error.message);
+    }
+ }
+ const listSalesReport = async(req,res) => { 
+    try{
+        // console.log(req.body);
+        
+        const currentDate = new Date(req.body.to)
+        console.log(currentDate);
+        const newDate = new Date(currentDate)
+        newDate.setDate(currentDate.getDate() + 1)
+        
+        // console.log(currentDate);
+        console.log("hiiiii");
+        console.log(newDate);
+        console.log("kooi");
+        
+        if(req.body.from.trim() == '' ||req.body.to.trim() == ''){
+            res.render('salesReport',{message:'all field required'})
+        }else{
+            const saleData = await Order.find({
+                orderStatus:'delivered',
+                date:{ $gte:new Date(req.body.from), $lte:new Date(newDate)}
+                
+            })
+            .populate({path:'items',populate:{path:'productId',model:'Product'}})
+            console.log(saleData);
+            res.render('listSalesReport',{saleData})
+        }
+
+    }catch(error){
+        console.log(error.messaeg);
+    }
+ }
 module.exports={
     loadLogin,
     verifyLogin,
@@ -369,5 +613,21 @@ module.exports={
     DeleteProduct,
     ViewProduct,
     updateImage,
-    deleteImage
+    deleteImage,
+    loadOrderlist,
+    loadcoupon,
+    addCoupon,
+    editCoupon,
+    updateCoupon,
+    DeleteCoupon,
+    placedOrder,
+    shipedOrder,
+    deliveredOrder,
+    loadOfferBanner,
+    insertBanner,
+    editBanner,
+    updateBanner,
+    deleteBanner,
+    loadSales,
+    listSalesReport
 }    

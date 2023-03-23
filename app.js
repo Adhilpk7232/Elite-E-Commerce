@@ -9,6 +9,8 @@ const env = require('dotenv').config()
 
 const { dirname } = require('path')
 
+// app.set('views','./views/admin')
+
 /// admin connetion of js,css etc
 app.use(express.static(path.join(__dirname,'public')))
 

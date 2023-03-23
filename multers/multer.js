@@ -27,8 +27,20 @@ const categoryStorage =multer.diskStorage({
 })
 
 const categoryMulter = multer({storage:categoryStorage})
+const bannerStorage =multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,path.join(__dirname,"../public/banner-img"))
+    },
+    filename:function(req,file,cb){
+        const name = Date.now()+"-"+file.originalname
+        cb(null,name)
+    }
+})
+
+const bannerMult = multer({storage:bannerStorage})
 
 module.exports ={
     upload,
-    categoryMulter
+    categoryMulter,
+    bannerMult
 }
