@@ -67,9 +67,108 @@ const verifyLogin = async (req,res)=>{
 
 const loadDashboard = async (req,res)=>{
     try{
+        const salesCount = await Order.find({}).count()
+        console.log(salesCount);
+        const users = await User.find({}).count()
+        console.log(users);
+        const online = await Order.find({paymentMethod:'Online Payment'}).count()
+        console.log(online);
+        const cod = await Order.find({paymentMethod:'COD'}).count()
+        console.log(cod);
+        
+        const ord = await Order.find().populate({path:'items',populate:{path:'productId',model:'Product',populate:{path:'category'}}})
+        console.log(ord);
+        const categoryCount  = {};
+        ord.forEach(order => { 
+            order.items.forEach(product => { 
+                const category = product.productId.category.categoryName
+                console.log("vv");
+                console.log(category);
+                if(category in categoryCount){
+                    categoryCount[category] += 1
+                }else{
+                    categoryCount[category] = 1
+                }
+            })
+        })
+        console.log(categoryCount);
+        const sortedCategoryCount  = Object.entries(categoryCount).sort((a,b) => b[1]-a[1])
+        const numbersOnly  = sortedCategoryCount.map(innerArray => innerArray[1])
+        const categoryNames = sortedCategoryCount.map((categoryCount) => { 
+            return categoryCount[0]
+        })
+        console.log(numbersOnly);
+        console.log(categoryNames);
 
-        const userData = await User.find({is_admin:0})
-        res.render('home')
+
+
+        const weeklyRevenueOf = await Order.aggregate([
+            {
+                $match:{
+                    date:{
+                        $gte:new Date(new Date().setDate(new Date().getDate()-7))
+                    },orderStatus:{
+                        $eq:'delivered'
+                    }
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    Revenue:{$sum:'$totalAmount'}
+                }
+            }
+        ]);
+        console.log(weeklyRevenueOf);
+        const weeklyRevenue = weeklyRevenueOf.map((item) => {
+            return item.Revenue
+        });
+        console.log(weeklyRevenue);
+
+        const weeklySales = await Order.aggregate([
+            {
+                $match:{
+                    orderStatus:{
+                        $eq:'delivered'
+                    }
+                }
+            },
+            {
+                $group:{
+                    _id:
+                        { $dateToString:{ format : "%d-%m-%Y", date: "$date"}},
+                    sales:{$sum:"totalAmount"}
+                }
+            },
+            {
+                $sort:{_id:1}
+            },
+            {
+                $limit:7
+            },
+            
+        ])
+        console.log(weeklySales);
+        const date = weeklySales.map((item) => { 
+            return item._id
+        })
+        const Sales = weeklySales.map((item) => { 
+            return item.sales
+        })
+
+
+        // const userData = await User.find({is_admin:0})
+        res.render('home',{
+            salesCount:salesCount,
+            userCount:users,
+            weeklyRevenue:weeklyRevenue,
+            upi:online,cash:cod,
+            weeklySale:weeklySales,
+            date:date,
+            Sales:Sales,
+            categoryName:categoryNames,
+            categorySaleCount:numbersOnly
+        })
     }catch(error){
         console.log(error.message);
     }
