@@ -44,7 +44,7 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a>
+                    <a class="navbar-brand" href="index.html"> <img src="/img/elite logo2.png" alt="logo" style="height: 130px; width: 250px;"></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -131,11 +131,14 @@
           <thead>
             <tr>
               <th>SL.No</th>
-              <th scope="col">Order ID</th>
+              
               <th scope="col">Name</th>
               <th scope="col">Address</th>
               <th scope="col">Amount</th>
               <th scope="col">status</th>
+              <th scope="col">Action</th>
+              <th scope="col">View</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -145,7 +148,7 @@
                 <% for( let i = 0; i < orders.length; i++ ) { %> 
             <tr>
               <td><%= i + 1 %></td>
-              <td><%= orders[i]._id.toString().substring(0,6)%></td>
+              
               
               <td>
                 <% orders[i].items.forEach((element,index) => { %>
@@ -164,23 +167,46 @@
               </td>
               <td><h4><%= orders[i].orderStatus%></h4></td>
               <td class="quantity-col">
-                <div class="">
-                  <a href="/cancel?id=<%=orders[i]._id%> " class="btn_3">Cancel Order</a>
-                  <!-- <button class="btn_3" onclick="cancel('<%= orders[i]._id %>')">Cancel Order</button> -->
-                </div><!-- End .cart-product-quantity -->
+                <% if(orders[i].orderStatus == 'cancelled'||orders[i].orderStatus == 'delivered'){%>
+
+                  <%}else{%>
+                    <div class="">
+                      <a href="/cancel?id=<%=orders[i]._id%> " class="btn_3">Cancel Order</a>
+                      
+                    </div>
+  
+                    <%}%>
+                    
+                      <!-- <div class="">
+                        <a href="/return-order " class="btn_3">return Order</a>
+                        
+                      </div> -->
+                    
+
+                
+                <!-- End .cart-product-quantity -->
+                
             </td>
+            <td><a href="/ordered-products?id=<%= orders[i]._id %>"><i class="fa-solid fa-eye"></i></a></td>
+            
+            </td>
+           
+
+            
             </tr>
             </tbody>
             
             <% } 
           }%>
             </table>
+            
 
         </div>
       </div>
     
     </div>
 </section>
+
 
 
   <!--================Home Banner Area =================-->
@@ -287,7 +313,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </div>
   </footer>
   <!--::footer_part end::-->
-
+  <script>
+    function invoice(){
+      var divToPrint = document.getElementById("invoice");
+var newWindow = window.open("", "Print Window");
+newWindow.document.write(divToPrint.outerHTML);
+newWindow.print();
+newWindow.close();
+    }
+  </script>
   
   <!-- jquery plugins here-->
   <!-- jquery -->

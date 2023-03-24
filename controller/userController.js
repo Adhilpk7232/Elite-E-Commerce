@@ -13,12 +13,67 @@ const crypto = require('crypto')
 const config = require('../config/config')
 const mongoose = require('mongoose')
 const { response } = require('../routes/userRoute')
-const fs=require('fs')
+// const fs=require('fs')
 //----------------------------------
 const {TWILIO_SERVICE_SID,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN} = process.env
 const client = require('twilio')(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,{
     lazyLoading:true
 })
+
+
+///html to pdf generate requirethingd
+// const puppeteer = require('puppeteer')
+// const fs = require('fs-extra')
+// const ejs = require('ejs')
+// const path = require('path')
+//  const compile =async function(templeteName){
+//     const filePath = path.join(process.cwd(),'views',`${templeteName}.ejs`)
+//     const html = await fs.readFile(filePath,'utf-8')
+//     console.log(html);
+//     return ejs.compile(html)
+//  }
+
+// const exportOrderPdf = async(req,res) => { 
+    // const id = req.query.id
+    // const orderData = await Order.findOne({_id:id}).populate({path:'items',populate:{path:'productId',model:'Product'}})
+    // try{
+    //     const browser = await puppeteer.launch()
+    //     const page = await browser.newpage()
+
+    //     await page.setContent('<h1>Hello</h1>')
+    //     await page.emulateMedia('screen')
+    //     await page.pdf({
+    //         path:'mypdf.pdf',
+    //         format:'A4',
+    //         printBackground:true
+    //     });
+    //     console.log('done');
+    //     await browser.close()
+    //     process.exit()
+
+    // }catch(error){
+    //     console.log(error.message);
+    // }
+//     let browser;
+//   (async () => {
+//     browser = await puppeteer.launch();
+//     const [page] = await browser.pages();
+//     // const html = await ejs.renderFile("greet.ejs",{name:"adhil"});
+    
+//     const content =await compile('greet')
+//     await page.setContent(content);
+//     const buf = await page.screenshot();
+//     res.contentType("image/png");
+//     res.send(buf);
+//   })()
+//     .catch(err => {
+//       console.error(err);
+//       res.sendStatus(500);
+//     }) 
+//     .finally(() => browser?.close());
+// }
+
+
   
 //-----------------------------------
 
@@ -695,20 +750,24 @@ const loadCheckout = async(req,res) => {
 // couponApply function
 const couponApply = async (req, res) => {
     try {
-      const user = await User.findOne({ _id: req.session.user_id });
-      console.log(user);
-      let cartTotal = user.cartTotalPrice;
-      console.log("cart");
-      console.log(cartTotal);
+        console.log("haiiiiiiiiiii");
+        
+        const userId = req.session.user_id
+        console.log(userId);
+        const user = await User.findOne({ _id:userId });
+        console.log(user);
+        let cartTotal = user.cartTotalPrice;
+        console.log("cart");
+        console.log(cartTotal);
   
       const exist = await Coupon.findOne({
         couponCode: req.body.code,
-        used: { $in: [user._id] },
+        used: { $in: [userId] },
       });
   
       if (exist) {
         console.log("ubhayokichu");
-        res.json({ used: true });
+        return res.json({ used: true });
       } else {
         const couponData = await Coupon.findOne({ couponCode: req.body.code });
         if (couponData) {
@@ -814,6 +873,16 @@ const addAddressCheckout = async(req,res) => {
         console.log(error.message);
     }
 }
+const loadShop = async(req,res) => { 
+    try{
+        const categoryData = await Category.find()
+        const productData = await Product.find()
+        res.render('shop',{categoryData,productData})
+
+    }catch(error){
+        console.log(error.mesage);
+    }
+}
 const loadShopCategory = async (req,res) =>{
     try{
         const catId=req.params.id
@@ -841,11 +910,21 @@ const orderList = async (req,res) => {
     try{
         const id = req.session.user_id
         const orders = await Order.find({userId:id}).populate({path:'items',populate:{path:'productId',model:'Product'}})
-        console.log("hai"+orderList);
+        console.log("hai"+orders);
         res.render('orderList',{orders})
     }catch(error){
         console.log(error.message);
     }
+}
+const orderedProducts = async(req,res) => { 
+     try{
+        const orderId  =req.query.id
+        const orderProduct = await Order.findOne({_id:orderId}).populate({path:'items',populate:{path:'productId',model:'Product'}})
+        res.render('orderedProduct',{orderProduct})
+
+     }catch(error){
+        console.log(error.message);
+     }
 }
 const cancelOrder =  async(req,res) => { 
      try{
@@ -975,9 +1054,20 @@ const loadSingleProduct = async(req,res) => {
 const placeOrder = async(req,res) => {
     try{
         // console.log("get place order");
-        const index = req.body.address
-        console.log(index);
         const userId = req.session.user_id
+        const index = req.body.address
+        console.log(req.body.couponDiscount);
+        console.log(req.body.total1);
+        console.log(req.body.couponC);
+
+        const discount = req.body.couponDiscount
+        const totel = req.body.total1
+        const coupon = req.body.couponC
+        const couponUpdate = await Coupon.updateOne({couponCode:coupon},{$push:{used:userId}})
+        console.log(couponUpdate);
+
+        console.log(index);
+        
         const address= await Address.findOne({userId:userId})
         const userAddress = address.userAddresses[index]
         // console.log(userAddress);
@@ -1002,7 +1092,8 @@ const placeOrder = async(req,res) => {
             paymentMethod:payment,
             orderStatus:status,
             items:cartData.cart,
-            totalAmount:total
+            totalAmount:total,
+            discount:discount
         }
          await Order.create(orderObj)
         .then(async(data) => {
@@ -1121,5 +1212,8 @@ module.exports={
     verifyPayment,
     orderSuccess,
     couponApply,
-    wishlistToCart
+    wishlistToCart,
+    loadShop,
+    orderedProducts,
+    // exportOrderPdf
 }

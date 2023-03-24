@@ -40,7 +40,7 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a>
+                    <a class="navbar-brand" href="index.html"> <img src="/img/elite logo2.png" alt="logo" style="height: 130px; width: 250px;"> </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
                                 <a class="nav-link" href="/home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/shopCategory">Shop</a>
+                                <a class="nav-link" href="/shop">Shop</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/cart">Cart</a>
@@ -133,8 +133,8 @@
         </div>
         <p id="CouponError"></p>
         <div class="">
-          <input type="text" placeholder="Enter coupon code"  name="couponCode" id="code"/>
-        <button   class="tp_btn"  type="button" onclick="applyCoupon($('#code').val())" >Apply Coupon</button>
+          <input type="text" placeholder="Enter coupon code"  name="couponCode" id="couponCode"/>
+        <button   class="tp_btn"  type="button" onclick="applyCoupon($('#couponCode').val())" >Apply Coupon</button>
         </div>
       </div>
       
@@ -150,43 +150,49 @@
               <div class="card-body">
                 <blockquote class="blockquote mb-0">
                   <div class=" ">
-  
-                  <form action="" id="checkout-form">
-                    
-                                <%if(address==null){ %>
-                                  <%}else{ %>
-                                    <% address.userAddresses.forEach((value,index)=> { %>
-            
-                                      <label>
-                                        <input type="radio" name="address" value="<%= index%>" required>
-                                        <div class="mb-3 ms-5">
-                                          <span>
-                                            <%= value.fullname%><br>
-                                              <%= value.mobileNumber %> <br>
-                                                <%= value.houseAddress %>,<%= value.streetAddress %> ,<%= value.landMark %> <br>
-                                                <%= value.cityName %>,<%= value.state %> <br>
+          
+                    <form action="" id="checkout-form">
+          
+                      <input type="hidden" name="couponDiscount" id="discount1" value="">
+                      <input type="hidden" name="total1" id="total1" value="">
+                      <input type="hidden" name="couponC" id="code" value="">
+          
+          
+          
+                      <%if(address==null){ %>
+                        <%}else{ %>
+                          <% address.userAddresses.forEach((value,index)=> { %>
+          
+                            <label>
+                              <input type="radio" name="address" value="<%= index%>" required>
+                              <div class="mb-3 ms-5">
+                                <span>
+                                  <%= value.fullname%><br>
+                                    <%= value.mobileNumber %> <br>
+                                      <%= value.houseAddress %>,<%= value.streetAddress %> ,<%= value.landMark %> <br>
+                                            <%= value.cityName %>,<%= value.state %> <br>
                                                 <%= value.pincode %>
-                                          </span>
-                                        </div>
-                                      </label>
-                                      <br>
-                                      <hr>
-                                      <% } ) }%>
-                                        <div>
-            
-            
-                                          <!-- Button trigger modal -->
-                                          <button type="button" class="btn btn_3" data-toggle="modal"
-                                            data-target="#exampleModalCenter">
-                                            Add Address
-                                          </button>
-                                        </div>
-                                </div>
-                
-                                  </blockquote>
-                                </div>
+                                                </span>
+                                              </div>
+                          
+                                            </label>
+                                            <br>
+                                            <hr>
+                                            <% } ) }%>
+                                              <div>
+          
+          
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn_3" data-toggle="modal" data-target="#exampleModalCenter">
+                                  Add Address
+                                </button>
                               </div>
-                            </div>
+                              </div>
+                      
+                            </blockquote>
+                          </div>
+                        </div>
+                      </div>
                             <div class="col-lg-4">
                               <div class="order_box">
                                 <h2>Your Order</h2>
@@ -208,21 +214,21 @@
                                     <% }) %>
                                       <li>
                                         <a href="#">Subtotal
-                                          <span>₹<%= userData.cartTotalPrice %></span>
+                                          <span >₹<%= userData.cartTotalPrice %></span>
                                         </a>
                                       </li>
                                       <li>
                                         <a href="#">Discount:
                                           <span id="discount"></span>
                                         </a>
-                                        <p id="discount1"></p>
+                                        
                                       </li>
                                      
                                       <li>
                                         <a href="#">Total
                                           <span id="total">₹<%= userData.cartTotalPrice%></span>
                                         </a>
-                                        <!-- <p id="total1"></p> -->
+                                        
                                       </li>
                                 </ul>
                                 <div class="payment_item">
@@ -238,7 +244,7 @@
                                 <div class="payment_item active">
                                   <div class="radion_btn">
                                     <input type="radio" id="f-option6" name="payment" value="Online Payment" />
-                                    <label for="f-option6">Paypal </label>
+                                    <label for="f-option6">Razorpay </label>
                                     <img src="img/product/single-product/card.jpg" alt="" />
                                     <div class="check"></div>
                                   </div>
@@ -436,7 +442,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
  
   <script>
     function applyCoupon(code) {
+      console.log(code);
       console.log("Applying coupon...");
+      
       $.ajax({
         url: "/coupon-apply",
         data: {
@@ -459,6 +467,20 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
               title: "Oops...",
               text: "Purchase amount does not meet the minimum requirement for the coupon.",
             });
+          } else if (response.used) {
+            console.log("Coupon already used.");
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Coupon already used.",
+            });
+          } else if(response.invalid) {
+            console.log("Coupon invalid.");
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Entered invalid Coupon .",
+            });
           } else if (response.limit) {
             console.log("Coupon limit exceeded.");
             Swal.fire({
@@ -468,6 +490,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             });
           } else if (response.amountokey) {
             console.log("Coupon granted.");
+            document.getElementById('code').value = response.code
+            document.getElementById('discount').innerHTML = response.discountValue
+            document.getElementById('discount1').value = response.discountValue
+            document.getElementById('total').innerHTML = response.value
+            document.getElementById('total1').value = response.value
+
+
             Swal.fire({
               position: "center",
               icon: "success",

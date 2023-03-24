@@ -22,7 +22,8 @@ const orderSchema = mongoose.Schema({
     paymentMethod:{type:String},
     orderStatus:{type:String},
     items:{type:Array},
-    totalAmount:{type:Number}
+    totalAmount:{type:Number},
+    discount:{type:Number}
 },{timestamps:true})
 
 module.exports = mongoose.model('Order',orderSchema)

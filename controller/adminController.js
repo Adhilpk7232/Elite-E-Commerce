@@ -82,7 +82,7 @@ const loadDashboard = async (req,res)=>{
         ord.forEach(order => { 
             order.items.forEach(product => { 
                 const category = product.productId.category.categoryName
-                console.log("vv");
+
                 console.log(category);
                 if(category in categoryCount){
                     categoryCount[category] += 1
@@ -123,6 +123,7 @@ const loadDashboard = async (req,res)=>{
         const weeklyRevenue = weeklyRevenueOf.map((item) => {
             return item.Revenue
         });
+        console.log("aaaa");
         console.log(weeklyRevenue);
 
         const weeklySales = await Order.aggregate([
@@ -137,7 +138,7 @@ const loadDashboard = async (req,res)=>{
                 $group:{
                     _id:
                         { $dateToString:{ format : "%d-%m-%Y", date: "$date"}},
-                    sales:{$sum:"totalAmount"}
+                    sales:{$sum:"$totalAmount"}
                 }
             },
             {
@@ -466,6 +467,15 @@ const loadOrderlist = async(req,res) => {
         console.log("hellojksnx");
     }
 }
+const loadOrderProduct = async (req,res) => { 
+    try{
+        const orderId = req.query.id
+        const orderProduct = await Order.findOne({_id:orderId}).populate({path:'items',populate:{path:'productId',model:'Product'}})
+        res.render('orderProductView',{orderProduct})
+    }catch(error){
+        console.log(error.messaeg);
+    }
+}
 const placedOrder  = async(req,res) => { 
     try{
         const orderId = req.query.id
@@ -728,5 +738,6 @@ module.exports={
     updateBanner,
     deleteBanner,
     loadSales,
-    listSalesReport
+    listSalesReport,
+    loadOrderProduct
 }    

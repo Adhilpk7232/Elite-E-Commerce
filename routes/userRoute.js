@@ -63,14 +63,13 @@ route.post('/add-to-wishlist',auth.isLogin,userController.AddToWishlist)
 route.post('/remove-wishlist',auth.isLogin,userController.deleteWishlistProduct)
 route.post('/wishlistToCart',auth.isLogin,userController.wishlistToCart)
 
-
+route.get('/shop',userController.loadShop)
 
 route.get('/checkout',userController.loadCheckout)
 route.get('/shopCategory/:id',userController.loadShopCategory)
 route.get('/single-product/:id',userController.loadSingleProduct)
-
+//user profile 
 route.get('/profile',userController.loadProfile)
-
 route.post('/add-address',userController.insertAddress)
 route.get('/edit-address/:id/:adrsId',auth.isLogin,userController.editAddress)
 route.post('/add-address-checkOut',userController.addAddressCheckout)
@@ -79,16 +78,18 @@ route.post('/add-address-checkOut',userController.addAddressCheckout)
 route.post('/edit-update-address/:addressIndex',auth.isLogin,userController.updateAddress)
 route.get('/delete-address/:id/:adrsId',userController.DeleteAddress)
 
-route.post('coupon-apply',auth.isLogin,userController.couponApply)
+route.post('/coupon-apply',auth.isLogin,userController.couponApply)
 
 
 route.get('/orderlist',auth.isLogin,userController.orderList)
+route.get('/ordered-products',auth.isLogin,userController.orderedProducts)
 route.get("/cancel",auth.isLogin,userController.cancelOrder)
+
 route.post('/place-order',auth.isLogin,userController.placeOrder)
-
-
 route.post('/verify-payment',auth.isLogin,userController.verifyPayment)
 route.get('/ordersuccess',auth.isLogin,userController.orderSuccess)
+// route.get('/export-order',userController.exportOrder)
+// route.get('/export-order-pdf',userController.exportOrderPdf)
 
 
 

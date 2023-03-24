@@ -57,6 +57,7 @@ router.get('/delete-banner',adminController.deleteBanner)
 // router.get('/add-offerBanner',) 
 ///order
 router.get('/order',adminController.loadOrderlist)
+router.get('/order-view',adminController.loadOrderProduct)
 router.get('/orderStatus-placed',adminController.placedOrder)
 router.get('/orderStatus-shiped',adminController.shipedOrder)
 router.get('/orderStatus-delivered',adminController.deliveredOrder)

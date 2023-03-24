@@ -36,7 +36,7 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a>
+                    <a class="navbar-brand" href="index.html"> <img src="/img/elite logo2.png" alt="logo" style="height: 130px; width: 250px;"> </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@
                                 <a class="nav-link" href="/home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/shopCategory">Shop</a>
+                                <a class="nav-link" href="/shop">Shop</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/cart">Cart</a>
@@ -217,24 +217,262 @@
                   <th> <span><%=orderData.totalAmount%></span></th>
                 </tr>
                 <tr>
-                  <th colspan="3">shipping</th>
-                  <th><span>flat rate: $00.00</span></th>
+                  <th colspan="3">discount</th>
+                  <th><span><%= orderData.discount %></span></th>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th scope="col" colspan="3">Total</th>
-                  <th scope="col"><%=orderData.totalAmount%></th>
+                  <th scope="col"><%=orderData.totalAmount - orderData.discount %></th>
                 </tr>
-                <button onclick="generatePDF()">Download Invoice</button>
+                
+               
               </tfoot>
             </table>
           </div>
         </div>
       </div>
+      <button type="button" class="btn btn_3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Download invoice
+    </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8" />
+                <title>Tax Invoice</title>
+                <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+                <style>
+                  * {
+                    box-sizing: border-box;
+                  }
+            
+                  .table-bordered td,
+                  .table-bordered th {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    word-break: break-all;
+                  }
+            
+                  body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    font-size: 16px;
+                  }
+                  .h4-14 h4 {
+                    font-size: 12px;
+                    margin-top: 0;
+                    margin-bottom: 5px;
+                  }
+                  .img {
+                    margin-left: "auto";
+                    margin-top: "auto";
+                    height: 30px;
+                  }
+                  pre,
+                  p {
+                    /* width: 99%; */
+                    /* overflow: auto; */
+                    /* bpicklist: 1px solid #aaa; */
+                    padding: 0;
+                    margin: 0;
+                  }
+                  table {
+                    font-family: arial, sans-serif;
+                    width: 100%;
+                    border-collapse: collapse;
+                    padding: 1px;
+                  }
+                  .hm-p p {
+                    text-align: left;
+                    padding: 1px;
+                    padding: 5px 4px;
+                  }
+                  td,
+                  th {
+                    text-align: left;
+                    padding: 8px 6px;
+                  }
+                  .table-b td,
+                  .table-b th {
+                    border: 1px solid #ddd;
+                  }
+                 
+                  .hm-p td,
+                  .hm-p th {
+                    padding: 3px 0px;
+                  }
+                  .cropped {
+                    float: right;
+                    margin-bottom: 20px;
+                    height: 100px; /* height of container */
+                    overflow: hidden;
+                  }
+                  .cropped img {
+                    width: 400px;
+                    margin: 8px 0px 0px 80px;
+                  }
+                  .main-pd-wrapper {
+                    box-shadow: 0 0 10px #ddd;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    padding: 15px;
+                  }
+                  .table-bordered td,
+                  .table-bordered th {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    font-size: 14px;
+                  }
+                  .invoice-items {
+                    font-size: 14px;
+                    border-top: 1px dashed #ddd;
+                  }
+                  .invoice-items td{
+                    padding: 14px 0;
+                   
+                  }
+                </style>
+              </head>
+              <body>
+                <section class="main-pd-wrapper" id="invoice" style="width: 450px; margin: auto">
+                  <div style="
+                              text-align: center;
+                              margin: auto;
+                              line-height: 1.5;
+                              font-size: 14px;
+                              color: #4a4a4a;
+                            ">
+                         
+            
+                            <p style="font-weight: bold; color: #000; margin-top: 15px; font-size: 18px;">
+                               Invoice/Bill Of Supply <span class="text-danger">StepUP</span> Retailers<br> Private Limited
+                            </p>
+                            <p style="margin: 15px auto;">
+                              A2, Test Street <br>
+                              Test Area Bangaluru 560001, Karnataka
+                            </p>
+                            <p>
+                              <b>GSTIN:</b> 0987653456789
+                            </p>
+                            <p>
+                              <b>CIN:</b> 0987653456789
+                            </p>
+                            <p>
+                              <b>FSSAI No. :</b> 0987653456789
+                            </p>
+                            <hr style="border: 1px dashed rgb(131, 131, 131); margin: 25px auto">
+                          </div>
+                          <table style="width: 100%; table-layout: fixed">
+                            <thead>
+                              <tr>
+                                <th style="width: 50px; padding-left: 0;">Sn.</th>
+                                <th style="width: 220px;">Item Name</th>
+                                <th>Price</th>
+                                <th>QTY</th>
+                                <th style="text-align: right; padding-right: 0;">Total Price</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <%orderData.items.forEach((product,index) => { %>
+                              <tr class="invoice-items">
+                                <td><%= index+1 %></td>
+                                <td ><%= product.productId.product_name%></td>
+                                <td>₹<%= product.price%></td>
+                                <td><%= product.qty %> PC</td>
+                                <td style="text-align: right;">₹<%= product.productTotalPrice%></td>
+                              </tr>
+                              <% }) %>
+                              
+                           
+                            </tbody>
+                          </table>
+                          <table style="width: 100%;
+                          margin-top: 15px;
+                          border: 1px dashed #00cd00;
+                          border-radius: 3px;">
+                            <thead>
+                              <tr>
+                                <th>Sub Total</th>
+                               
+                                <th style="text-align: right;">₹ <%= orderData.totalAmount %></th>
+                                
+                              </tr>
+                              <tr>
+                                <td>Discount </td>
+                                
+                                <!-- <td style="text-align: right;">-₹ </td> -->
+                                
+                                <td style="text-align: right;">₹ <%= orderData.discount %></td>
+                                  
+                              </tr>
+                              <tr>
+                                <td>Total Saving In Rs </td>
+                                
+                                  <!-- <td style="text-align: right;">₹</td> -->
+                                  
+                                  <td style="text-align: right;">₹ 0</td>
+  
+                              </tr>
+                              
+                            </thead>
+                         
+                          </table>
+            
+                          <table class="my-3" style="width: 100%;
+                          background: #fcbd024f;
+                          border-radius: 4px;">
+                            <thead>
+                              <tr>
+                                <th>Total</th>
+                                <th style="text-align: center;">Item(<%= orderData.items.length %>)</th>
+                                <th>&nbsp;</th>
+                                <th style="text-align: right;">₹ <%= orderData.totalAmount-orderData.discount %></th>
+                                
+                              </tr>
+                            </thead>
+                         
+                          </table>
+            
+                         
+            
+                </section>
+              </body>
+            </html>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn_3" onclick="invoice()">Save Invoice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    
+  
+  <script>
+    function invoice(){
+      var divToPrint = document.getElementById("invoice");
+    var newWindow = window.open("", "Print Window");
+    newWindow.document.write(divToPrint.outerHTML);
+    newWindow.print();
+    newWindow.close();
+    }
+  </script>
     </div> 
   </section>
-
+  
   <!--================ confirmation part end =================-->
 
   <!--::footer_part start::-->
@@ -332,7 +570,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </div>
   </footer>
   <!--::footer_part end::-->
-
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+  
   <!-- jquery plugins here-->
   <!-- jquery -->
   <script src="js/jquery-1.12.1.min.js"></script>

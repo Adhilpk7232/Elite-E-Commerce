@@ -20,6 +20,14 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link text-white " href="/admin/sales-report">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">receipt_long</i>
+            </div>
+            <span class="nav-link-text ms-1">Sales report</span>
+          </a>
+        </li>
+        <li class="nav-item">
 
           <!-- <a href="/hi">ividey amarthu</a> -->
           <a class="nav-link text-white " href="/admin/user">
@@ -126,12 +134,14 @@
       <thead>
         <tr>
           <th>sl.no</th>
-          <th>order Id</th>
+          
           <th>Date</th>
           <th>Address</th>
           <th>payment Method</th>
           <th>order Status</th>
           <th>totalAmount</th>
+          <th>Action</th>
+          <th>view</th>
 
           <!-- <th>Action</th> -->
          
@@ -142,12 +152,14 @@
         <% for (var i = 0; i < order.length; i++) { %>
           <tr>
             <td><%= i+1 %></td>
-            <td><%= order[i]._id %></td>
-            <td><%= order[i].createdAt %></td>
+            
+            <td><%= order[i].date.toLocaleString({day:'2-digit',month:'2-digit',year:'2-digit'}) %></td>
             <td><p><%=order[i].address.fullName %><br><%=order[i].address.mobileNumber %><br><%=order[i].address.pincode %><br>
               <%=order[i].address.houseAddress %><br><%=order[i].address.streetAddress %><%=order[i].address.landMark%>,<%=order[i].address.cityName %>,<%=order[i].address.state %>
           </p></td>
             <td><%= order[i].paymentMethod %></td>
+            <td><%= order[i].orderStatus %></td>
+            <td><%= order[i].totalAmount %></td>
             <td>
               <div class="dropdown">
                 <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -169,7 +181,8 @@
                 </ul>
               </div>
             </td>
-            <td><%= order[i].totalAmount %></td>
+            <td><a href="/admin/order-view?id=<%= order[i]._id %>"><i class="fa-solid fa-eye"></i></a></td>
+            
           </tr>
           <% } %>
         </tbody>
